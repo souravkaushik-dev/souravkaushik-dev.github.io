@@ -1,704 +1,921 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sourav Kaushik | Portfolio</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sourav Kaushik — Flutter Developer & Certified Ethical Hacker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ---- Material 3 tonal roles (dark) ---- */
+    --md-bg:#121318;
+    --md-surface:#1a1b22;
+    --md-surface-high:#22232c;
+    --md-surface-highest:#2b2c37;
+    --md-outline: rgba(255,255,255,0.09);
+    --md-on-surface:#eae7f0;
+    --md-on-surface-var:#9d99a8;
+    --md-primary:#63ecd9;
+    --md-on-primary:#00382f;
+    --md-primary-container: rgba(99,236,217,0.16);
+    --md-on-primary-container:#bdf5ea;
+    --md-secondary:#c2adff;
+    --md-secondary-container: rgba(194,173,255,0.16);
+    --md-on-secondary-container:#e4d8ff;
+    --md-tertiary:#ffc687;
+    --md-tertiary-container: rgba(255,198,135,0.16);
+    --md-on-tertiary-container:#ffe3c2;
+    color-scheme: dark;
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    /* elevation (soft, layered) */
+    --elev-1: 0 1px 2px rgba(0,0,0,.35), 0 1px 5px rgba(0,0,0,.2);
+    --elev-2: 0 2px 4px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.25);
+    --elev-3: 0 4px 10px rgba(0,0,0,.3), 0 10px 30px -6px rgba(0,0,0,.35);
+    --elev-4: 0 8px 18px rgba(0,0,0,.32), 0 20px 50px -12px rgba(0,0,0,.4);
 
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    /* shape scale */
+    --shape-xs:12px; --shape-sm:16px; --shape-md:20px; --shape-lg:28px; --shape-xl:36px; --shape-full:999px;
 
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-  />
+    /* motion — spatial gets spring overshoot, effects stay clean */
+    --spring: cubic-bezier(.34,1.45,.4,1);
+    --standard: cubic-bezier(.2,0,0,1);
+  }
+  html[data-theme="light"]{
+    --md-bg:#f7f2fa;
+    --md-surface:#ffffff;
+    --md-surface-high:#f2edf7;
+    --md-surface-highest:#ebe5f2;
+    --md-outline: rgba(20,15,30,0.08);
+    --md-on-surface:#1c1a22;
+    --md-on-surface-var:#615e6b;
+    --md-primary:#0f8f7f;
+    --md-on-primary:#ffffff;
+    --md-primary-container:#c6f3ea;
+    --md-on-primary-container:#00352c;
+    --md-secondary:#6b52c9;
+    --md-secondary-container:#e7deff;
+    --md-on-secondary-container:#22105c;
+    --md-tertiary:#a2591c;
+    --md-tertiary-container:#ffddb3;
+    --md-on-tertiary-container:#3e2200;
+    color-scheme: light;
+    --elev-1: 0 1px 2px rgba(30,20,40,.08), 0 1px 5px rgba(30,20,40,.06);
+    --elev-2: 0 2px 5px rgba(30,20,40,.08), 0 6px 16px rgba(30,20,40,.08);
+    --elev-3: 0 4px 10px rgba(30,20,40,.08), 0 12px 28px -8px rgba(30,20,40,.14);
+    --elev-4: 0 8px 18px rgba(30,20,40,.1), 0 22px 48px -14px rgba(30,20,40,.18);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--md-bg);
+    color:var(--md-on-surface);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    transition:background-color .5s var(--standard), color .5s var(--standard);
+    overflow-x:hidden;
+  }
+  ::selection{ background: var(--md-primary); color: var(--md-on-primary); }
+  a{color:inherit; text-decoration:none;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  .wrap{max-width:1120px; margin:0 auto; padding:0 28px;}
 
-  <link rel="stylesheet" href="css/style.css" />
+  /* ---------- ripple (Material state layer) ---------- */
+  .ripple-host{ position:relative; overflow:hidden; }
+  .ripple{
+    position:absolute; border-radius:50%; background:currentColor; opacity:.18;
+    transform:scale(0); animation: rippleAnim .65s var(--standard) forwards; pointer-events:none;
+  }
+  @keyframes rippleAnim{ to{ transform:scale(2.6); opacity:0; } }
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0; transform: translateY(24px) scale(.98); transition: opacity .7s var(--standard), transform .65s var(--spring);}
+  .reveal.in{opacity:1; transform:none;}
+  .reveal-d1{transition-delay:.07s;}
+  .reveal-d2{transition-delay:.14s;}
+  .reveal-d3{transition-delay:.21s;}
+
+  /* ---------- animated split text ---------- */
+  .split-word{ display:inline-block; overflow:hidden; vertical-align:top; }
+  .split-word span{
+    display:inline-block; transform: translateY(115%); opacity:0;
+    transition: transform .8s var(--spring), opacity .5s var(--standard);
+    transition-delay: calc(var(--i, 0) * 45ms);
+  }
+  .split-in .split-word span{ transform:none; opacity:1; }
+
+  /* ---------- nav ---------- */
+  header{ position:fixed; top:14px; left:0; right:0; z-index:100; display:flex; justify-content:center; }
+  .navbar{
+    width:min(920px, calc(100% - 32px));
+    display:flex; align-items:center; justify-content:space-between;
+    padding:8px 8px 8px 20px;
+    background:var(--md-surface); border:1px solid var(--md-outline);
+    border-radius:var(--shape-full); box-shadow:var(--elev-2);
+    transition: background-color .5s var(--standard), border-color .5s var(--standard);
+  }
+  .brand{display:flex; align-items:center; gap:10px; font-family:'Space Grotesk'; font-weight:600; font-size:15px;}
+  .brand .mark{
+    width:34px; height:34px; border-radius:var(--shape-sm); position:relative; flex:none;
+    background: linear-gradient(135deg, var(--md-primary), var(--md-secondary));
+    display:flex; align-items:center; justify-content:center;
+    transition: border-radius .5s var(--spring);
+  }
+  .brand:hover .mark{ border-radius:50%; }
+  .brand .mark span{ font-family:'Space Grotesk'; font-size:12px; font-weight:700; color:var(--md-bg); }
+  nav.links{display:flex; gap:2px; align-items:center; position:relative;}
+  .nav-indicator{
+    position:absolute; top:2px; bottom:2px; left:0; width:0; border-radius:var(--shape-full);
+    background:var(--md-primary-container);
+    transition: transform .5s var(--spring), width .5s var(--spring), opacity .3s;
+    z-index:0; opacity:0; pointer-events:none;
+  }
+  nav.links a{
+    position:relative; z-index:1; font-size:13.5px; font-weight:500; color:var(--md-on-surface-var);
+    padding:9px 16px; border-radius:var(--shape-full); transition: color .3s var(--standard);
+  }
+  nav.links a:hover{ color:var(--md-on-surface); }
+  nav.links a.active{ color:var(--md-on-primary-container); }
+  .theme-toggle{
+    display:flex; align-items:center; gap:2px; padding:4px; border-radius:var(--shape-full);
+    background:var(--md-surface-high); margin-left:6px;
+  }
+  .theme-toggle button{
+    width:32px; height:32px; border:none; border-radius:var(--shape-full); background:transparent; color:var(--md-on-surface-var);
+    display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative; overflow:hidden;
+    transition: background-color .35s var(--standard), color .3s, border-radius .4s var(--spring);
+  }
+  .theme-toggle button.active{ background:var(--md-primary); color:var(--md-on-primary); border-radius:var(--shape-sm); }
+  .theme-toggle svg{width:15px; height:15px;}
+  .navburger{
+    display:none; width:38px; height:38px; border-radius:var(--shape-full); margin-left:6px; flex:none;
+    background:var(--md-surface-high); border:none; color:var(--md-on-surface);
+    align-items:center; justify-content:center; cursor:pointer; position:relative; overflow:hidden;
+    transition: border-radius .4s var(--spring);
+  }
+  .navburger:hover{ border-radius:var(--shape-sm); }
+  .navburger svg{ width:16px; height:16px; }
+  .mobile-menu{
+    position:fixed; top:80px; left:16px; right:16px; z-index:99; padding:8px;
+    background:var(--md-surface); border:1px solid var(--md-outline); border-radius:var(--shape-lg);
+    box-shadow:var(--elev-3); display:flex; flex-direction:column; gap:2px;
+    opacity:0; visibility:hidden; transform: translateY(-14px) scale(.95);
+    transition: opacity .4s var(--standard), transform .5s var(--spring), visibility .4s;
+  }
+  .mobile-menu.open{ opacity:1; visibility:visible; transform:none; }
+  .mobile-menu a{ padding:13px 16px; border-radius:var(--shape-md); font-size:14.5px; font-weight:500; color:var(--md-on-surface-var); transition: background-color .25s, color .25s; }
+  .mobile-menu a:hover, .mobile-menu a.active{ background:var(--md-primary-container); color:var(--md-on-primary-container); }
+
+  /* ---------- hero ---------- */
+  .hero{ position:relative; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:140px 24px 80px; }
+  .blob-field{ position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+  .blob{
+    position:absolute; width:620px; height:620px; border-radius:42% 58% 65% 35% / 45% 40% 60% 55%; top:50%; left:50%;
+    transform: translate(-50%,-50%);
+    background: linear-gradient(135deg, var(--md-primary-container), var(--md-secondary-container) 55%, var(--md-tertiary-container));
+    filter: blur(70px); opacity:.9;
+    animation: morph 16s var(--standard) infinite alternate;
+  }
+  @keyframes morph{
+    0%{ border-radius:42% 58% 65% 35% / 45% 40% 60% 55%; }
+    33%{ border-radius:65% 35% 40% 60% / 55% 65% 35% 45%; }
+    66%{ border-radius:35% 65% 55% 45% / 40% 55% 45% 60%; }
+    100%{ border-radius:58% 42% 45% 55% / 60% 45% 55% 40%; }
+  }
+  .eyebrow{
+    position:relative; z-index:1; display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono'; font-size:12.5px; font-weight:500; color:var(--md-on-primary-container);
+    padding:8px 18px; border-radius:var(--shape-full); background:var(--md-primary-container);
+    margin-bottom:28px; animation: floaty 4s ease-in-out infinite;
+  }
+  @keyframes floaty{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-5px);} }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--md-primary); box-shadow:0 0 8px var(--md-primary); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+  .hero h1{ position:relative; z-index:1; font-family:'Space Grotesk'; font-weight:700; letter-spacing:-.02em; font-size:clamp(38px,8vw,80px); line-height:1.05; margin-bottom:22px; }
+  .hero h1 .accent{ color:var(--md-primary); }
+  .hero p.tagline{ position:relative; z-index:1; max-width:560px; margin:0 auto 36px; color:var(--md-on-surface-var); font-size:16.5px; line-height:1.65;
+    opacity:0; transform:translateY(16px); transition: opacity .8s var(--standard) .5s, transform .8s var(--spring) .5s; }
+  .tagline.in{ opacity:1; transform:none; }
+  .cta-row{ position:relative; z-index:1; display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:56px; }
+
+  .btn{
+    font-family:'Inter'; font-weight:600; font-size:14px; padding:14px 28px; border-radius:var(--shape-full); cursor:pointer; border:none;
+    display:inline-flex; align-items:center; gap:8px; position:relative; overflow:hidden;
+    transition: transform .45s var(--spring), box-shadow .35s var(--standard), border-radius .4s var(--spring);
+  }
+  .btn:hover{ transform: translateY(-3px) scale(1.03); border-radius:var(--shape-md); }
+  .btn:active{ transform: translateY(0) scale(.97); }
+  .btn-primary{ background:var(--md-primary); color:var(--md-on-primary); box-shadow:var(--elev-1); }
+  .btn-primary:hover{ box-shadow:var(--elev-3); }
+  .btn-tonal{ background:var(--md-secondary-container); color:var(--md-on-secondary-container); }
+  .btn-tonal:hover{ box-shadow:var(--elev-2); }
+
+  .terminal{
+    position:relative; z-index:1; width:min(560px,92vw); text-align:left; border-radius:var(--shape-lg); overflow:hidden;
+    background:var(--md-surface); border:1px solid var(--md-outline); box-shadow:var(--elev-3);
+  }
+  .terminal .bar{ display:flex; gap:6px; padding:12px 16px; border-bottom:1px solid var(--md-outline); background:var(--md-surface-high); }
+  .terminal .bar span{ width:9px; height:9px; border-radius:50%; opacity:.55; }
+  .terminal .bar span:nth-child(1){ background:var(--md-tertiary); }
+  .terminal .bar span:nth-child(2){ background:var(--md-secondary); }
+  .terminal .bar span:nth-child(3){ background:var(--md-primary); }
+  .terminal .body{ padding:16px 18px 20px; font-family:'JetBrains Mono'; font-size:13px; color:var(--md-primary); min-height:26px; }
+  .terminal .body::before{ content:"$ "; color:var(--md-on-surface-var); }
+  .terminal .caret{ display:inline-block; width:7px; height:14px; background:var(--md-primary); margin-left:2px; vertical-align:-2px; animation: blink 1s step-end infinite; }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  /* ---------- section shell ---------- */
+  section{ position:relative; padding:110px 0; scroll-margin-top:100px; }
+  .kicker{
+    font-family:'JetBrains Mono'; font-size:12px; font-weight:500; letter-spacing:.06em; color:var(--md-primary); text-transform:uppercase; margin-bottom:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .kicker::before{ content:""; width:22px; height:2px; border-radius:2px; background:var(--md-primary); }
+  h2.title{ font-family:'Space Grotesk'; font-weight:700; font-size:clamp(28px,4vw,40px); letter-spacing:-.01em; margin-bottom:16px; }
+  .lead{ color:var(--md-on-surface-var); font-size:16px; line-height:1.7; max-width:640px; }
+
+  /* ---------- about ---------- */
+  .about-grid{ display:grid; grid-template-columns: 1.1fr .9fr; gap:18px; align-items:start; margin-top:50px; }
+  .about-card{
+    padding:26px; border-radius:var(--shape-lg); background:var(--md-surface); border:1px solid var(--md-outline);
+    box-shadow:var(--elev-1); transition: transform .5s var(--spring), box-shadow .4s var(--standard), border-radius .4s var(--spring);
+  }
+  .about-card:hover{ transform:translateY(-5px); box-shadow:var(--elev-3); border-radius:var(--shape-xl); }
+  .about-card + .about-card{ margin-top:16px; }
+  .about-card .num{
+    display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:var(--shape-xs);
+    font-family:'JetBrains Mono'; font-size:11.5px; font-weight:600; color:var(--md-on-primary-container);
+    background:var(--md-primary-container); margin-bottom:12px;
+  }
+  .about-card h4{ font-family:'Space Grotesk'; font-size:16px; margin-bottom:6px; }
+  .about-card p{ color:var(--md-on-surface-var); font-size:14px; line-height:1.6; }
+
+  /* ---------- skills ---------- */
+  .skills-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:50px; }
+  .skill-card{
+    padding:26px; border-radius:var(--shape-lg); background:var(--md-surface); border:1px solid var(--md-outline);
+    box-shadow:var(--elev-1); cursor:pointer; text-align:left;
+    transition: transform .5s var(--spring), box-shadow .4s var(--standard), border-radius .45s var(--spring);
+  }
+  .skill-card:hover{ transform: translateY(-8px) scale(1.015); box-shadow:var(--elev-4); border-radius:var(--shape-xl); }
+  .skill-card:active{ transform: translateY(-2px) scale(.98); }
+  .skill-card .icon{
+    width:46px; height:46px; border-radius:var(--shape-md); display:flex; align-items:center; justify-content:center; margin-bottom:18px;
+    background: var(--md-primary-container); color: var(--md-on-primary-container);
+    transition: border-radius .5s var(--spring), transform .5s var(--spring);
+  }
+  .skill-card:hover .icon{ border-radius:50%; transform: rotate(-8deg) scale(1.05); }
+  .skill-card:nth-child(2) .icon{ background: var(--md-secondary-container); color:var(--md-on-secondary-container); }
+  .skill-card:nth-child(3) .icon{ background: var(--md-tertiary-container); color:var(--md-on-tertiary-container); }
+  .skill-card:nth-child(5) .icon{ background: var(--md-secondary-container); color:var(--md-on-secondary-container); }
+  .skill-card:nth-child(6) .icon{ background: var(--md-tertiary-container); color:var(--md-on-tertiary-container); }
+  .skill-card svg{ width:22px; height:22px; stroke-dasharray: 100; stroke-dashoffset:100; }
+  .skill-card.in svg{ animation: draw 1.1s var(--standard) forwards .2s; }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+  .skill-card h4{ font-family:'Space Grotesk'; font-size:15.5px; margin-bottom:12px; }
+  .taglist{ display:flex; flex-wrap:wrap; gap:7px; }
+  .taglist span{
+    font-family:'JetBrains Mono'; font-size:11px; font-weight:500; color:var(--md-on-surface-var); padding:6px 11px; border-radius:var(--shape-full);
+    background:var(--md-surface-high); transition: background-color .3s, color .3s, transform .3s var(--spring);
+  }
+  .taglist span:hover{ background:var(--md-primary-container); color:var(--md-on-primary-container); transform:translateY(-2px); }
+
+  /* ---------- projects ---------- */
+  .project{
+    display:grid; grid-template-columns: .95fr 1.05fr; gap:44px; align-items:center;
+    padding:36px; border-radius:var(--shape-xl); background:var(--md-surface); border:1px solid var(--md-outline);
+    margin-top:24px; box-shadow:var(--elev-1); cursor:pointer;
+    transition: transform .5s var(--spring), box-shadow .4s var(--standard);
+  }
+  .project:hover{ transform:translateY(-6px); box-shadow:var(--elev-4); }
+  .project:active{ transform:translateY(-2px) scale(.995); }
+  .project:nth-child(odd){ grid-template-columns: 1.05fr .95fr; }
+  .project:nth-child(odd) .project-visual{ order:2; }
+  .project-visual{
+    aspect-ratio: 4/3.1; border-radius:var(--shape-lg); position:relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center; background:var(--md-surface-high);
+  }
+  .project-visual .bg1{
+    position:absolute; inset:0;
+    background: linear-gradient(135deg, var(--v1), var(--v2) 60%, var(--v3));
+    opacity:.9;
+  }
+  .project-visual .glass-panel{
+    position:relative; z-index:1; width:78%; padding:22px; border-radius:var(--shape-md);
+    background:var(--md-surface); box-shadow:var(--elev-3);
+  }
+  .project-visual .glass-panel .dots{ display:flex; gap:5px; margin-bottom:14px;}
+  .project-visual .glass-panel .dots span{ width:7px; height:7px; border-radius:50%; background:var(--md-outline);}
+  .project-visual .glass-panel .line{ height:8px; border-radius:5px; background:var(--md-surface-high); margin-bottom:9px; }
+  .project-visual .glass-panel .line:nth-child(2){ width:80%; }
+  .project-visual .glass-panel .line:nth-child(3){ width:60%; }
+  .project-visual .glow-icon{ position:relative; z-index:1; font-size:56px; filter:drop-shadow(0 8px 20px rgba(0,0,0,.25)); }
+
+  .project-body .tag{ font-family:'JetBrains Mono'; font-size:11.5px; font-weight:500; color:var(--md-on-surface-var); text-transform:uppercase; letter-spacing:.06em; margin-bottom:10px; display:block;}
+  .project-body h3{ font-family:'Space Grotesk'; font-size:26px; margin-bottom:12px; }
+  .project-body p{ color:var(--md-on-surface-var); font-size:14.5px; line-height:1.7; margin-bottom:18px; }
+  .project-body .featurelist{ display:grid; grid-template-columns:1fr 1fr; gap:8px 14px; margin-bottom:22px; }
+  .project-body .featurelist li{ list-style:none; font-size:13px; color:var(--md-on-surface-var); display:flex; gap:8px; align-items:flex-start; }
+  .project-body .featurelist li::before{ content:"✓"; color:var(--md-primary); flex:none; font-weight:700; }
+  .project-body .stackrow{ display:flex; flex-wrap:wrap; gap:7px; margin-bottom:22px; }
+  .project-links{ display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
+  .project-links a.repo{
+    font-size:13.5px; font-weight:600; display:inline-flex; align-items:center; gap:7px; color:var(--md-on-surface);
+    padding:10px 18px; border-radius:var(--shape-full); background:var(--md-surface-high);
+    transition: background-color .3s, transform .4s var(--spring), border-radius .4s var(--spring);
+  }
+  .project-links a.repo:hover{ background:var(--md-primary-container); color:var(--md-on-primary-container); transform:translateY(-2px); border-radius:var(--shape-sm); }
+  .project-links a svg{ width:14px; height:14px; }
+
+  /* ---------- experience ---------- */
+  .timeline{ margin-top:50px; position:relative; padding-left:30px; }
+  .timeline::before{ content:""; position:absolute; left:5px; top:6px; bottom:6px; width:2px; border-radius:2px; background:var(--md-outline); }
+  .tl-item{ position:relative; padding-bottom:44px; }
+  .tl-item:last-child{ padding-bottom:0; }
+  .tl-item::before{
+    content:""; position:absolute; left:-30px; top:4px; width:12px; height:12px; border-radius:50%;
+    background:var(--md-primary); box-shadow:0 0 0 5px var(--md-primary-container);
+    transition: border-radius .4s var(--spring);
+  }
+  .tl-item.in::before{ animation: pop .5s var(--spring) .2s backwards; }
+  @keyframes pop{ 0%{ transform:scale(0);} 100%{ transform:scale(1);} }
+  .tl-item .when{ font-family:'JetBrains Mono'; font-size:12px; color:var(--md-on-surface-var); margin-bottom:6px; }
+  .tl-item h4{ font-family:'Space Grotesk'; font-size:18px; margin-bottom:4px; }
+  .tl-item .org{ color:var(--md-primary); font-size:13.5px; font-weight:600; margin-bottom:12px; }
+  .tl-item ul{ padding-left:18px; }
+  .tl-item li{ color:var(--md-on-surface-var); font-size:14px; line-height:1.75; margin-bottom:4px; }
+
+  .edu-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:50px; }
+  .edu-card{
+    padding:24px; border-radius:var(--shape-lg); background:var(--md-surface); border:1px solid var(--md-outline); box-shadow:var(--elev-1);
+    transition: transform .5s var(--spring), box-shadow .4s var(--standard);
+  }
+  .edu-card:hover{ transform:translateY(-5px); box-shadow:var(--elev-3); }
+  .edu-card .when{ font-family:'JetBrains Mono'; font-size:12px; color:var(--md-on-surface-var); margin-bottom:8px; }
+  .edu-card h4{ font-family:'Space Grotesk'; font-size:16.5px; margin-bottom:5px;}
+  .edu-card p{ color:var(--md-on-surface-var); font-size:13.5px; }
+
+  /* ---------- contact ---------- */
+  .contact-card{
+    margin-top:44px; padding:60px 44px; border-radius:var(--shape-xl); text-align:center; position:relative; overflow:hidden;
+    background: linear-gradient(160deg, var(--md-primary-container), var(--md-surface) 60%); border:1px solid var(--md-outline); box-shadow:var(--elev-3);
+  }
+  .contact-card .blob{ width:420px; height:420px; opacity:.5; }
+  .contact-card h2{ position:relative; z-index:1; font-family:'Space Grotesk'; font-weight:700; font-size:clamp(26px,4vw,38px); margin-bottom:14px; }
+  .contact-card p{ position:relative; z-index:1; color:var(--md-on-surface-var); margin-bottom:32px; }
+  .contact-row{ position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }
+  .contact-pill{
+    display:flex; align-items:center; gap:9px; padding:13px 22px; border-radius:var(--shape-full); font-size:13.5px; font-weight:600;
+    background:var(--md-surface); box-shadow:var(--elev-1); color:var(--md-on-surface);
+    transition: transform .4s var(--spring), box-shadow .35s var(--standard), border-radius .4s var(--spring);
+  }
+  .contact-pill:hover{ transform: translateY(-4px) scale(1.03); box-shadow:var(--elev-3); border-radius:var(--shape-md); }
+  .contact-pill svg{ width:16px; height:16px; color:var(--md-primary); flex:none; }
+
+  footer{ padding:36px 0 90px; text-align:center; color:var(--md-on-surface-var); font-size:12.5px; font-family:'JetBrains Mono'; }
+
+  /* ---------- FAB (scroll to top) ---------- */
+  .fab{
+    position:fixed; bottom:26px; right:26px; z-index:90; width:52px; height:52px; border:none; border-radius:var(--shape-lg);
+    background:var(--md-primary); color:var(--md-on-primary); box-shadow:var(--elev-3);
+    display:flex; align-items:center; justify-content:center; cursor:pointer; overflow:hidden;
+    opacity:0; transform: translateY(20px) scale(.7); pointer-events:none;
+    transition: opacity .4s var(--standard), transform .5s var(--spring), border-radius .4s var(--spring), box-shadow .3s;
+  }
+  .fab.show{ opacity:1; transform:none; pointer-events:auto; }
+  .fab:hover{ border-radius:50%; box-shadow:var(--elev-4); }
+  .fab svg{ width:20px; height:20px; }
+
+  /* ---------- modal ---------- */
+  .modal-backdrop{
+    position:fixed; inset:0; z-index:1000; display:flex; align-items:center; justify-content:center; padding:24px;
+    background: rgba(10,8,14,0.55); opacity:0; visibility:hidden; transition: opacity .4s var(--standard), visibility .4s;
+  }
+  html[data-theme="light"] .modal-backdrop{ background: rgba(40,32,50,0.32); }
+  .modal-backdrop.open{ opacity:1; visibility:visible; }
+  .modal-panel{
+    position:relative; width:min(600px, 100%); max-height:82vh; overflow-y:auto;
+    border-radius:var(--shape-xl); padding:42px 40px; background:var(--md-surface); border:1px solid var(--md-outline);
+    box-shadow:var(--elev-4);
+    transform: scale(.85) translateY(30px); opacity:0; transition: transform .55s var(--spring), opacity .35s var(--standard);
+  }
+  .modal-backdrop.open .modal-panel{ transform: scale(1) translateY(0); opacity:1; }
+  .modal-close{
+    position:absolute; top:20px; right:20px; width:38px; height:38px; border-radius:50%; border:none;
+    background:var(--md-surface-high); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--md-on-surface);
+    transition: transform .4s var(--spring), background-color .25s, border-radius .4s var(--spring);
+  }
+  .modal-close:hover{ transform: rotate(90deg); background:var(--md-primary-container); border-radius:var(--shape-sm); }
+  .modal-close svg{ width:15px; height:15px; }
+  .modal-eyebrow{ font-family:'JetBrains Mono'; font-size:11.5px; color:var(--md-primary); text-transform:uppercase; letter-spacing:.06em; margin-bottom:14px; font-weight:600; }
+  .modal-icon{
+    width:54px; height:54px; border-radius:var(--shape-md); display:flex; align-items:center; justify-content:center; margin-bottom:20px;
+    background: var(--md-primary-container); color:var(--md-on-primary-container);
+  }
+  .modal-icon svg{ width:24px; height:24px; }
+  .modal-panel h3{ font-family:'Space Grotesk'; font-weight:700; font-size:26px; margin-bottom:14px; }
+  .modal-panel .modal-desc{ color:var(--md-on-surface-var); font-size:14.5px; line-height:1.75; margin-bottom:22px; }
+  .modal-panel .modal-feats{ display:grid; grid-template-columns:1fr 1fr; gap:8px 14px; margin-bottom:24px; }
+  .modal-panel .modal-feats li{ list-style:none; font-size:13px; color:var(--md-on-surface-var); display:flex; gap:8px; align-items:flex-start; }
+  .modal-panel .modal-feats li::before{ content:"✓"; color:var(--md-primary); flex:none; font-weight:700; }
+  .modal-panel .modal-tags{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px; }
+  .modal-panel .modal-links{ display:flex; gap:12px; flex-wrap:wrap; }
+
+  @media (max-width: 860px){
+    nav.links{ display:none; }
+    .navburger{ display:flex; }
+    .about-grid{ grid-template-columns:1fr; }
+    .skills-grid{ grid-template-columns:1fr 1fr; }
+    .project, .project:nth-child(odd){ grid-template-columns:1fr; }
+    .project:nth-child(odd) .project-visual{ order:0; }
+    .edu-grid{ grid-template-columns:1fr; }
+    .project-body .featurelist{ grid-template-columns:1fr; }
+  }
+  @media (max-width: 560px){
+    .skills-grid{ grid-template-columns:1fr; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+  }
+</style>
 </head>
 <body>
 
-  <div class="bg"></div>
-  <div class="gradient gradient-1"></div>
-  <div class="gradient gradient-2"></div>
-
-  <!-- NAVBAR -->
-
-  <nav class="navbar glass">
-
-    <div class="logo">SOURAV</div>
-
-    <div class="nav-links">
-      <a href="#about">About</a>
-      <a href="#education">Education</a>
-      <a href="#apps">Apps</a>
-      <a href="#contact">Contact</a>
+<header>
+  <div class="navbar">
+    <div class="brand"><span class="mark"><span>SK</span></span>Sourav Kaushik</div>
+    <nav class="links" id="navLinks">
+      <span class="nav-indicator" id="navIndicator"></span>
+      <a href="#about" data-nav="about">About</a>
+      <a href="#skills" data-nav="skills">Skills</a>
+      <a href="#work" data-nav="work">Work</a>
+      <a href="#experience" data-nav="experience">Experience</a>
+      <a href="#contact" data-nav="contact">Contact</a>
+    </nav>
+    <div class="theme-toggle" role="group" aria-label="Theme">
+      <button data-theme-btn="light" title="Light" aria-label="Light theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/></svg>
+      </button>
+      <button data-theme-btn="auto" title="Auto" aria-label="System theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="12" rx="2.2"/><path d="M8 20.5h8M12 16.5v4"/></svg>
+      </button>
+      <button data-theme-btn="dark" title="Dark" aria-label="Dark theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 0 0 11 11Z"/></svg>
+      </button>
     </div>
-
-  </nav>
-
-  <!-- HERO -->
-
-  <section class="hero">
-
-    <div class="hero-left reveal">
-
-      <span class="hero-badge">
-        Flutter Developer • CEH Certified
-      </span>
-
-      <h1>
-        Building Premium
-        Digital Experiences.
-      </h1>
-
-      <p>
-        I'm Sourav Kaushik — Flutter developer,
-        UI designer and cybersecurity enthusiast
-        creating elegant Apple-inspired mobile
-        experiences with immersive interactions.
-      </p>
-
-      <div class="hero-buttons">
-        <a href="#apps" class="primary-btn">Explore Apps</a>
-        <a href="#contact" class="secondary-btn">Contact Me</a>
-      </div>
-
-    </div>
-
-    <div class="hero-right reveal glass">
-
-      <div class="hero-card glass-light">
-        <i class="fa-solid fa-mobile-screen-button"></i>
-        <div>
-          <h3>6+ Apps</h3>
-          <span>Flutter Projects</span>
-        </div>
-      </div>
-
-      <div class="hero-card glass-light">
-        <i class="fa-solid fa-shield-halved"></i>
-        <div>
-          <h3>CEH</h3>
-          <span>EC-Council Certified</span>
-        </div>
-      </div>
-
-      <div class="hero-card glass-light">
-        <i class="fa-solid fa-graduation-cap"></i>
-        <div>
-          <h3>BCA</h3>
-          <span>Amity University</span>
-        </div>
-      </div>
-
-    </div>
-
-  </section>
-
-  <!-- ABOUT -->
-
-<!-- ========================= -->
-<!-- ABOUT SECTION -->
-<!-- ========================= -->
-
-<section class="section reveal" id="about">
-
-  <div class="section-title">
-
-    <span>ABOUT</span>
-
-    <h2>
-      Designing Experiences That Feel Alive
-    </h2>
-
-    <p class="section-description">
-
-      Flutter developer, UI engineer and
-      cybersecurity enthusiast focused on
-      crafting immersive premium digital
-      experiences inspired by modern
-      Apple interaction systems.
-
-    </p>
-
+    <button class="navburger" id="navBurger" aria-label="Open menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
   </div>
-
-  <!-- ABOUT CARD -->
-
-  <div class="about-wrapper">
-
-    <div class="about-card glass">
-
-      <div class="about-top">
-
-        <div class="about-profile">
-
-          <div class="profile-glow"></div>
-
-          <div class="profile-image">
-
-            <img
-              src="images/profile.jpeg"
-              alt="Sourav"
-            />
-
-          </div>
-
-        </div>
-
-        <div class="about-intro">
-
-          <span class="about-badge">
-            Flutter Developer • CEH Certified
-          </span>
-
-          <h3>
-            Sourav Kaushik
-          </h3>
-
-          <p>
-
-            I'm a passionate Flutter
-            developer and Certified Ethical
-            Hacker focused on building
-            premium modern mobile
-            experiences with immersive
-            interactions, elegant animations
-            and ultra minimal visual systems.
-
-          </p>
-
-        </div>
-
-      </div>
-
-      <!-- ABOUT CONTENT -->
-
-      <div class="about-content">
-
-        <p>
-
-          My development philosophy focuses
-          on creating applications that feel
-          cinematic, fluid and emotionally
-          engaging — combining smooth motion,
-          scalable architecture and refined
-          interface systems into one seamless
-          experience.
-
-        </p>
-
-        <p>
-
-          I specialize in Flutter development,
-          UI engineering, glassmorphism design
-          systems, animation architecture and
-          modern interaction design inspired
-          by Apple aesthetics and futuristic
-          digital experiences.
-
-        </p>
-
-        <p>
-
-          Alongside development, I actively
-          explore ethical hacking, penetration
-          testing and secure application
-          systems as a Certified Ethical
-          Hacker (CEH), combining creativity
-          with security focused engineering.
-
-        </p>
-
-        <p>
-
-          My goal is to create applications
-          that are not only functional but
-          visually immersive, performance
-          driven and crafted with premium
-          attention to detail.
-
-        </p>
-
-      </div>
-
-      <!-- SKILLS -->
-
-      <div class="skills-grid">
-
-        <div class="skill-item">
-          <i class="fa-brands fa-flutter"></i>
-          Flutter
-        </div>
-
-        <div class="skill-item">
-          <i class="fa-solid fa-code"></i>
-          Dart
-        </div>
-
-        <div class="skill-item">
-          <i class="fa-brands fa-python"></i>
-          Python
-        </div>
-
-        <div class="skill-item">
-          <i class="fa-brands fa-js"></i>
-          JavaScript
-        </div>
-
-        <div class="skill-item">
-          <i class="fa-solid fa-shield-halved"></i>
-          Ethical Hacking
-        </div>
-
-        <div class="skill-item">
-          <i class="fa-solid fa-mobile-screen"></i>
-          Mobile UI/UX
-        </div>
-
-        <div class="skill-item">
-          <i class="fa-solid fa-layer-group"></i>
-          Motion Design
-        </div>
-
-        <div class="skill-item">
-          <i class="fa-solid fa-wand-magic-sparkles"></i>
-          Glassmorphism
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- EXPERIENCE -->
-
-    <div class="experience-card glass">
-
-      <div class="experience-head">
-
-        <span>
-          EXPERIENCE
-        </span>
-
-        <h3>
-          Professional Work
-        </h3>
-
-      </div>
-
-      <!-- EXPERIENCE ITEM -->
-
-      <div class="experience-item">
-
-        <div class="experience-icon">
-
-          <i class="fa-solid fa-briefcase"></i>
-
-        </div>
-
-        <div class="experience-content">
-
-          <div class="experience-top">
-
-            <h4>
-              Last Minute Deals App
-            </h4>
-
-            <span>
-              Flutter Developer
-            </span>
-
-          </div>
-
-          <p>
-
-            Worked on API implementation,
-            complete UI redesign,
-            performance optimization and
-            critical bug fixing for the
-            Last Minute Deals mobile
-            application.\n\n
-            Improved application stability,
-            modernized the interaction
-            system and redesigned the UI
-            with smoother user experiences
-            and cleaner architecture.
-
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#about" data-nav="about">About</a>
+    <a href="#skills" data-nav="skills">Skills</a>
+    <a href="#work" data-nav="work">Work</a>
+    <a href="#experience" data-nav="experience">Experience</a>
+    <a href="#contact" data-nav="contact">Contact</a>
   </div>
+</header>
 
+<section class="hero">
+  <div class="blob-field"><div class="blob"></div></div>
+  <span class="eyebrow"><span class="dot"></span> Available for Flutter &amp; security-minded projects</span>
+  <h1 id="heroTitle">Building apps that<br><span class="accent">adapt, secure, and ship.</span></h1>
+  <p class="tagline" id="heroTagline">I'm a Flutter developer and Certified Ethical Hacker based in Greater Noida — I design and build mobile products end to end, then stress-test them the way an attacker would.</p>
+  <div class="cta-row">
+    <a href="#work" class="btn btn-primary ripple-host">View my work</a>
+    <a href="#contact" class="btn btn-tonal ripple-host">Get in touch</a>
+  </div>
+  <div class="terminal">
+    <div class="bar"><span></span><span></span><span></span></div>
+    <div class="body"><span id="typeline"></span><span class="caret"></span></div>
+  </div>
 </section>
 
-  <!-- EDUCATION -->
-
-  <section class="section reveal" id="education">
-
-    <div class="section-title">
-      <span>EDUCATION</span>
-      <h2>Academic Journey</h2>
-    </div>
-
-    <div class="education-grid">
-
-      <div class="education-card glass">
-
-        <div class="edu-icon">
-          <i class="fa-solid fa-graduation-cap"></i>
+<section id="about">
+  <div class="wrap">
+    <div class="kicker reveal">Profile</div>
+    <h2 class="title split reveal">Two disciplines, one build process.</h2>
+    <p class="lead reveal reveal-d1">Innovative Flutter developer and Certified Ethical Hacker (CEH) with hands-on experience across mobile development, cybersecurity, and reverse engineering — building secure, high-performance apps with Flutter, Firebase, and real API integrations, backed by a working knowledge of vulnerability assessment.</p>
+    <div class="about-grid">
+      <div class="reveal reveal-d1">
+        <div class="about-card">
+          <div class="num">01</div>
+          <h4>Build</h4>
+          <p>Feature-rich, user-friendly Flutter applications — from UI/UX and state management to Firebase-backed data and REST API integration.</p>
         </div>
-
-        <h3>Bachelor of Computer Applications</h3>
-
-        <h4>Amity University</h4>
-
-        <span>2023 — 2026</span>
-
-        <p>
-          Pursuing BCA focused on Flutter development,
-          cybersecurity and scalable application systems.
-        </p>
-
-      </div>
-
-      <div class="education-card glass">
-
-        <div class="edu-icon">
-          <i class="fa-solid fa-shield"></i>
+        <div class="about-card">
+          <div class="num">02</div>
+          <h4>Break</h4>
+          <p>Ethical hacking, vulnerability assessment, and reverse engineering applied to the same products, closing the loop between shipping and securing.</p>
         </div>
-
-        <h3>Certified Ethical Hacker</h3>
-
-        <h4>EC-Council</h4>
-
-        <span>Certified • 2022</span>
-
-        <p>
-          Trained in penetration testing,
-          ethical hacking and secure software architecture.
-        </p>
-
       </div>
-
+      <div class="reveal reveal-d2">
+        <div class="about-card">
+          <div class="num">03</div>
+          <h4>Currently</h4>
+          <p>Flutter App Developer, focused on performance, scalability, and clean interface work — while continuing independent security research.</p>
+        </div>
+        <div class="about-card">
+          <div class="num">04</div>
+          <h4>Based in</h4>
+          <p>Greater Noida, Uttar Pradesh — open to remote and on-site collaboration.</p>
+        </div>
+      </div>
     </div>
-
-  </section>
-
-  <!-- APPS -->
-
-<!-- ========================= -->
-<!-- APPS SECTION -->
-<!-- ========================= -->
-
-<section class="section reveal" id="apps">
-
-  <div class="section-title">
-
-    <span>APPLICATIONS</span>
-
-    <h2>
-      Premium Digital Experiences
-    </h2>
-
-    <p class="section-description">
-
-      A collection of immersive Flutter
-      applications crafted with modern
-      aesthetics, smooth motion systems,
-      glassmorphism interfaces and
-      Apple-inspired interaction design.
-
-    </p>
-
   </div>
-
-  <div class="apps-grid">
-
-    <!-- ========================= -->
-    <!-- AERA -->
-    <!-- ========================= -->
-<a
-  href="elunae.html"
-  class="app-link"
->
-
-  <div class="app-card glass hover-card">
-
-    <div class="app-glow blue-glow"></div>
-
-    <div class="app-top">
-
-      <!-- AERA IMAGE ICON -->
-
-      <div class="app-image-icon">
-
-        <img
-          src="images/aera.png"
-          alt="Aera App Icon"
-        />
-
-      </div>
-
-      <div class="app-arrow">
-
-        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-
-      </div>
-
-    </div>
-
-    <div class="app-content">
-
-      <span class="app-label">
-        PRODUCTIVITY
-      </span>
-
-      <h3>
-        AERA
-      </h3>
-
-      <p>
-
-        A premium productivity ecosystem
-        designed for notes, task
-        management, journaling,
-        scheduling and immersive
-        organization experiences.
-
-      </p>
-
-    </div>
-
-    <div class="tags">
-
-      <span>
-        Flutter
-      </span>
-
-      <span>
-        Productivity
-      </span>
-
-      <span>
-        Minimal
-      </span>
-
-    </div>
-
-  </div>
-
-</a>
-
-    <!-- ========================= -->
-    <!-- ELUNAE -->
-    <!-- ========================= -->
-
-    <a
-      href="aera.html"
-      class="app-link"
-    >
-
-      <div class="app-card glass hover-card">
-
-        <div class="app-glow purple-glow"></div>
-
-        <div class="app-top">
-
-      <div class="app-image-icon">
-
-        <img
-          src="images/elunae.png"
-          alt="Aera App Icon"
-        />
-
-      </div>
-
-          <div class="app-arrow">
-
-            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-
-          </div>
-
-        </div>
-
-        <div class="app-content">
-
-          <span class="app-label">
-            MUSIC EXPERIENCE
-          </span>
-
-          <h3>
-            ELUNAE
-          </h3>
-
-          <p>
-
-            An immersive music platform
-            inspired by Apple aesthetics
-            featuring cinematic layouts,
-            fluid playback systems and
-            elegant modern interactions.
-
-          </p>
-
-        </div>
-
-        <div class="tags">
-
-          <span>
-            Flutter
-          </span>
-
-          <span>
-            Music
-          </span>
-
-          <span>
-            Audio
-          </span>
-
-        </div>
-
-      </div>
-
-    </a>
-
-    <!-- ========================= -->
-    <!-- DOTTY -->
-    <!-- ========================= -->
-
-<a
-  href="dotty.html"
-  class="app-link"
->
-
-  <div class="app-card glass hover-card">
-
-    <div class="app-glow orange-glow"></div>
-
-    <div class="app-top">
-
-      <!-- DOTTY IMAGE ICON -->
-
-      <div class="app-image-icon">
-
-        <img
-          src="images/dotty.png"
-          alt="Dotty App Icon"
-        />
-
-      </div>
-
-      <div class="app-arrow">
-
-        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-
-      </div>
-
-    </div>
-
-    <div class="app-content">
-
-      <span class="app-label">
-        WALLPAPER PLATFORM
-      </span>
-
-      <h3>
-        DOTTY
-      </h3>
-
-      <p>
-
-        A cinematic wallpaper experience
-        featuring immersive collections,
-        AMOLED optimized visuals,
-        ultra modern galleries and
-        premium browsing systems.
-
-      </p>
-
-    </div>
-
-    <div class="tags">
-
-      <span>
-        Flutter
-      </span>
-
-      <span>
-        Wallpapers
-      </span>
-
-      <span>
-        AMOLED
-      </span>
-
-    </div>
-
-  </div>
-
-</a>
-
-  </div>
-
 </section>
 
-  <!-- CONTACT -->
-
-  <section class="section reveal" id="contact">
-
-    <div class="section-title">
-      <span>CONTACT</span>
-      <h2>Let's Build Something Great</h2>
-    </div>
-
-    <div class="contact-card glass">
-
-<p>
-
-  Currently open to full-time roles,
-  freelance collaborations, startup
-  opportunities and innovative mobile
-  app projects focused on premium
-  digital experiences.\n\n
-
-  I’m actively looking to work with
-  companies, creators and teams that
-  value modern UI/UX, smooth interaction
-  systems and high-quality Flutter
-  development.\n\n
-
-  Whether it’s building scalable mobile
-  applications, redesigning user
-  experiences, implementing APIs,
-  optimizing performance or crafting
-  immersive animations — I’m always
-  excited to contribute to meaningful
-  products and ambitious ideas.
-
-</p>
-
-      <div class="hero-buttons">
-        <a href="https://github.com/souravkaushik-dev" class="primary-btn">GitHub</a>
-        <a href="https://www.linkedin.com/in/sourav-kaushik-5597bb271/" class="secondary-btn">LinkedIn</a>
+<section id="skills">
+  <div class="wrap">
+    <div class="kicker reveal">Capabilities</div>
+    <h2 class="title split reveal">Skills &amp; tools</h2>
+    <p class="lead reveal reveal-d1">The stack I build with, and the tools I use to test what I've built.</p>
+    <div class="skills-grid">
+      <div class="skill-card ripple-host reveal reveal-d1" data-skill="languages" role="button" tabindex="0">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg></div>
+        <h4>Languages</h4>
+        <div class="taglist"><span>Dart</span><span>Flutter</span><span>C</span><span>Node.js</span></div>
       </div>
+      <div class="skill-card ripple-host reveal reveal-d2" data-skill="mobile" role="button" tabindex="0">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18h2"/></svg></div>
+        <h4>Mobile development</h4>
+        <div class="taglist"><span>Firebase</span><span>API integration</span><span>UI/UX design</span></div>
+      </div>
+      <div class="skill-card ripple-host reveal reveal-d3" data-skill="cyber" role="button" tabindex="0">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l7 3.2v5.4c0 4.8-3 8.9-7 10.4-4-1.5-7-5.6-7-10.4V5.7z"/></svg></div>
+        <h4>Cybersecurity</h4>
+        <div class="taglist"><span>Ethical hacking</span><span>Vulnerability assessment</span><span>Reverse engineering</span></div>
+      </div>
+      <div class="skill-card ripple-host reveal reveal-d1" data-skill="devtools" role="button" tabindex="0">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M7 14h4"/></svg></div>
+        <h4>Dev tools</h4>
+        <div class="taglist"><span>VS Code</span><span>Android Studio</span><span>Git</span><span>GitHub</span></div>
+      </div>
+      <div class="skill-card ripple-host reveal reveal-d2" data-skill="sectools" role="button" tabindex="0">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l2.4 5.4 5.9.6-4.4 4 1.3 5.8L12 15.6 6.8 18.3l1.3-5.8-4.4-4 5.9-.6z"/></svg></div>
+        <h4>Security tools</h4>
+        <div class="taglist"><span>Burp Suite</span><span>Wireshark</span><span>Kali Linux</span><span>Nmap</span></div>
+      </div>
+      <div class="skill-card ripple-host reveal reveal-d3" data-skill="ai" role="button" tabindex="0">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.2 2"/></svg></div>
+        <h4>AI &amp; collaboration</h4>
+        <div class="taglist"><span>Gemini</span><span>ChatGPT</span><span>TensorFlow</span><span>Figma</span><span>Jira</span><span>Slack</span></div>
+      </div>
+    </div>
+  </div>
+</section>
 
+<section id="work">
+  <div class="wrap">
+    <div class="kicker reveal">Selected work</div>
+    <h2 class="title split reveal">Featured projects</h2>
+    <p class="lead reveal reveal-d1">Two apps, two very different moods — a privacy-first social platform, and a cinematic music player.</p>
+
+    <div class="project ripple-host reveal" data-project="pseudonymous" role="button" tabindex="0" style="--v1:var(--md-primary-container); --v2:var(--md-secondary-container); --v3:var(--md-tertiary-container);">
+      <div class="project-visual">
+        <div class="bg1"></div>
+        <div class="glass-panel">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <div class="line"></div><div class="line"></div><div class="line"></div>
+        </div>
+      </div>
+      <div class="project-body">
+        <span class="tag">Privacy · Social platform · Flutter + Firebase</span>
+        <h3>Pseudonymous</h3>
+        <p>A privacy-focused social platform where conversations matter more than identities. Users interact through usernames and customizable built-in avatars instead of public personas, so ideas can be shared without exposing who's behind them.</p>
+        <ul class="featurelist">
+          <li>Email &amp; Google authentication</li>
+          <li>Anonymous mode &amp; custom avatars</li>
+          <li>Posts, likes, comments &amp; replies</li>
+          <li>Follow system &amp; notifications</li>
+          <li>Material Design 3 UI</li>
+          <li>Cloud Firestore backend</li>
+        </ul>
+        <div class="stackrow">
+          <span class="taglist"><span>Flutter</span></span><span class="taglist"><span>Firebase Auth</span></span><span class="taglist"><span>Firestore</span></span><span class="taglist"><span>GoRouter</span></span><span class="taglist"><span>Provider</span></span>
+        </div>
+        <div class="project-links">
+          <a class="repo ripple-host" href="https://github.com/souravkaushik-dev/pseudonymous" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18.92-.26 1.9-.39 2.88-.39.98 0 1.96.13 2.88.39 2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.8 1.19 1.83 1.19 3.09 0 4.43-2.69 5.41-5.25 5.69.42.36.78 1.08.78 2.18 0 1.57-.01 2.84-.01 3.23 0 .31.21.67.8.56A10.52 10.52 0 0 0 23.5 12c0-6.35-5.15-11.5-11.5-11.5Z"/></svg>
+            View repository
+          </a>
+        </div>
+      </div>
     </div>
 
-  </section>
+    <div class="project ripple-host reveal" data-project="chameleon" role="button" tabindex="0" style="--v1:var(--md-secondary-container); --v2:var(--md-tertiary-container); --v3:var(--md-primary-container);">
+      <div class="project-visual">
+        <div class="bg1"></div>
+        <div class="glow-icon">🎬</div>
+      </div>
+      <div class="project-body">
+        <span class="tag">Media · Music player · Flutter + YouTube</span>
+        <h3>Chameleon</h3>
+        <p>A cinematic music player built around the music, not the interface. The artwork takes center stage, controls fade in only when needed, and a real-time equalizer, Liquid Glass navigation, and YouTube-powered discovery keep the experience quiet and focused.</p>
+        <ul class="featurelist">
+          <li>Real-time equalizer with presets</li>
+          <li>Cinematic full-screen player</li>
+          <li>Playlists, queue &amp; sleep timer</li>
+          <li>YouTube-powered search</li>
+          <li>Liquid Glass navigation</li>
+          <li>Light &amp; dark themes</li>
+        </ul>
+        <div class="stackrow">
+          <span class="taglist"><span>Flutter</span></span><span class="taglist"><span>just_audio</span></span><span class="taglist"><span>audio_service</span></span><span class="taglist"><span>youtube_explode_dart</span></span>
+        </div>
+        <div class="project-links">
+          <a class="repo ripple-host" href="https://github.com/souravkaushik-dev/chameleon" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18.92-.26 1.9-.39 2.88-.39.98 0 1.96.13 2.88.39 2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.8 1.19 1.83 1.19 3.09 0 4.43-2.69 5.41-5.25 5.69.42.36.78 1.08.78 2.18 0 1.57-.01 2.84-.01 3.23 0 .31.21.67.8.56A10.52 10.52 0 0 0 23.5 12c0-6.35-5.15-11.5-11.5-11.5Z"/></svg>
+            View repository
+          </a>
+          <span style="opacity:.6; font-size:12.5px; align-self:center;">v1.0.3 · early production build</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <footer>
-    © 2026 Sourav Kaushik
-  </footer>
+<section id="experience">
+  <div class="wrap">
+    <div class="kicker reveal">Career</div>
+    <h2 class="title split reveal">Experience</h2>
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <div class="when">Jan 2026 — Apr 2026</div>
+        <h4>Flutter App Developer</h4>
+        <div class="org">Last Minute Deals, India</div>
+        <ul>
+          <li>Developed and enhanced mobile applications using Flutter with a focus on performance and scalability.</li>
+          <li>Integrated REST APIs to enable seamless data communication between frontend and backend systems.</li>
+          <li>Implemented new UI components and improved existing interfaces for a more intuitive experience.</li>
+          <li>Optimized application responsiveness and resolved bugs across devices.</li>
+        </ul>
+      </div>
+      <div class="tl-item reveal">
+        <div class="when">2019 — 2021</div>
+        <h4>Junior Developer &amp; Ethical Hacker</h4>
+        <div class="org">Independent Projects</div>
+        <ul>
+          <li>Performed ethical hacking assessments, identifying vulnerabilities and suggesting security improvements.</li>
+          <li>Conducted reverse engineering of software systems to analyze loopholes and strengthen defenses.</li>
+          <li>Developed proof-of-concept projects demonstrating secure coding and penetration testing practices.</li>
+          <li>Contributed to malware research, deepening understanding of cyber threats and countermeasures.</li>
+        </ul>
+      </div>
+    </div>
 
-  <script src="js/script.js"></script>
+    <div class="kicker reveal" style="margin-top:70px;">Education</div>
+    <h2 class="title split reveal">Education &amp; certification</h2>
+    <div class="edu-grid">
+      <div class="edu-card reveal reveal-d1">
+        <div class="when">2023 — 2026</div>
+        <h4>Bachelor of Computer Applications (BCA)</h4>
+        <p>Amity University, India</p>
+      </div>
+      <div class="edu-card reveal reveal-d2">
+        <div class="when">2021 — 2022</div>
+        <h4>Certified Ethical Hacker (CEH)</h4>
+        <p>EC-Council, India</p>
+      </div>
+    </div>
+  </div>
+</section>
 
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-card">
+      <div class="blob-field"><div class="blob"></div></div>
+      <h2>Let's build something worth securing.</h2>
+      <p>Open to Flutter development work, app security reviews, and collaborations.</p>
+      <div class="contact-row">
+        <a class="contact-pill ripple-host" href="mailto:souravkaushik0.0@gmail.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 7l8 6 8-6"/></svg>
+          souravkaushik0.0@gmail.com
+        </a>
+        <a class="contact-pill ripple-host" href="tel:+918588884184">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5h4l1.6 4.5-2.1 1.7a13 13 0 0 0 6.3 6.3l1.7-2.1 4.5 1.6v4a1.5 1.5 0 0 1-1.6 1.5A16.5 16.5 0 0 1 3 6a1.5 1.5 0 0 1 1-1.5Z"/></svg>
+          +91 85888 84184
+        </a>
+        <a class="contact-pill ripple-host" href="https://www.linkedin.com/in/sourav-kaushik-5597bb271/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 5a2 2 0 1 1-4-.02 2 2 0 0 1 4 .02ZM3.3 8.75h3.28V21H3.3V8.75Zm5.72 0h3.15v1.68h.04c.44-.83 1.5-1.71 3.1-1.71 3.32 0 3.93 2.18 3.93 5.02V21h-3.28v-5.7c0-1.36-.02-3.1-1.89-3.1-1.9 0-2.19 1.48-2.19 3v5.8H9.02V8.75Z"/></svg>
+          LinkedIn
+        </a>
+        <a class="contact-pill ripple-host" href="https://github.com/souravkaushik-dev" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18.92-.26 1.9-.39 2.88-.39.98 0 1.96.13 2.88.39 2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.8 1.19 1.83 1.19 3.09 0 4.43-2.69 5.41-5.25 5.69.42.36.78 1.08.78 2.18 0 1.57-.01 2.84-.01 3.23 0 .31.21.67.8.56A10.52 10.52 0 0 0 23.5 12c0-6.35-5.15-11.5-11.5-11.5Z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 SOURAV KAUSHIK — GREATER NOIDA, UTTAR PRADESH</footer>
+
+<button class="fab ripple-host" id="fabTop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal-panel" id="modalPanel">
+    <button class="modal-close ripple-host" id="modalClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <div class="modal-eyebrow" id="modalEyebrow"></div>
+    <div class="modal-icon" id="modalIcon"></div>
+    <h3 id="modalTitle"></h3>
+    <p class="modal-desc" id="modalDesc"></p>
+    <ul class="modal-feats" id="modalFeats"></ul>
+    <div class="modal-tags" id="modalTags"></div>
+    <div class="modal-links" id="modalLinks"></div>
+  </div>
+</div>
+
+<script>
+  // ---------- theme ----------
+  const root = document.documentElement;
+  const mq = window.matchMedia('(prefers-color-scheme: light)');
+  let themeMode = 'auto';
+  function applyTheme(){
+    root.setAttribute('data-theme', themeMode === 'auto' ? (mq.matches ? 'light' : 'dark') : themeMode);
+    document.querySelectorAll('[data-theme-btn]').forEach(b=> b.classList.toggle('active', b.dataset.themeBtn === themeMode));
+  }
+  document.querySelectorAll('[data-theme-btn]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ themeMode = btn.dataset.themeBtn; applyTheme(); });
+  });
+  mq.addEventListener('change', ()=>{ if(themeMode==='auto') applyTheme(); });
+  applyTheme();
+
+  // ---------- split text into animated words ----------
+  function splitText(el){
+    const words = el.textContent.split(' ');
+    el.innerHTML = words.map(w => `<span class="split-word">${w.split('').map((c,i)=>`<span style="--i:${i}">${c}</span>`).join('')}</span>`).join(' ');
+  }
+  document.querySelectorAll('#heroTitle').forEach(el=>{
+    // preserve the <br> and accent span structure; wrap only text nodes
+    el.querySelectorAll('br').forEach(br=>{});
+  });
+  // Simpler: animate hero title as whole via CSS fade/rise instead of per-letter (keeps markup with <br>/accent intact)
+  const heroTitle = document.getElementById('heroTitle');
+  heroTitle.style.opacity = '0';
+  heroTitle.style.transform = 'translateY(28px)';
+  heroTitle.style.transition = 'opacity .9s var(--standard) .15s, transform .9s var(--spring) .15s';
+  requestAnimationFrame(()=> requestAnimationFrame(()=>{
+    heroTitle.style.opacity = '1'; heroTitle.style.transform = 'none';
+  }));
+  document.getElementById('heroTagline').classList.add('in');
+
+  document.querySelectorAll('h2.title.split').forEach(el=> splitText(el));
+
+  // ---------- reveal + split-in on scroll ----------
+  const revealEls = document.querySelectorAll('.reveal, .skill-card, .tl-item');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        if(e.target.classList.contains('split')) e.target.classList.add('split-in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold:0.15 });
+  revealEls.forEach(el=> io.observe(el));
+
+  // ---------- nav active indicator + scrollspy ----------
+  const navLinksWrap = document.getElementById('navLinks');
+  const navIndicator = document.getElementById('navIndicator');
+  const allNavLinks = document.querySelectorAll('[data-nav]');
+  const sectionIds = ['about','skills','work','experience','contact'];
+  function setActiveNav(id){
+    allNavLinks.forEach(a=> a.classList.toggle('active', a.dataset.nav === id));
+    const desktopActive = navLinksWrap.querySelector('a.active');
+    if(desktopActive){
+      navIndicator.style.opacity = '1';
+      navIndicator.style.width = desktopActive.offsetWidth + 'px';
+      navIndicator.style.transform = `translateX(${desktopActive.offsetLeft}px)`;
+    }
+  }
+  allNavLinks.forEach(a=> a.addEventListener('click', ()=>{ setActiveNav(a.dataset.nav); closeMobileMenu(); }));
+  const sectionSpy = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting) setActiveNav(e.target.id); });
+  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+  sectionIds.forEach(id=>{ const el = document.getElementById(id); if(el) sectionSpy.observe(el); });
+  window.addEventListener('resize', ()=>{
+    const active = navLinksWrap.querySelector('a.active');
+    if(active){ navIndicator.style.width = active.offsetWidth+'px'; navIndicator.style.transform = `translateX(${active.offsetLeft}px)`; }
+  });
+
+  // ---------- mobile menu ----------
+  const burger = document.getElementById('navBurger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  function closeMobileMenu(){ mobileMenu.classList.remove('open'); burger.setAttribute('aria-expanded','false'); }
+  burger.addEventListener('click', ()=>{
+    const open = mobileMenu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.addEventListener('click', (e)=>{
+    if(!mobileMenu.contains(e.target) && !burger.contains(e.target)) closeMobileMenu();
+  });
+
+  // ---------- ripple effect (Material state layer) ----------
+  document.addEventListener('click', (e)=>{
+    const host = e.target.closest('.ripple-host');
+    if(!host) return;
+    const r = host.getBoundingClientRect();
+    const size = Math.max(r.width, r.height);
+    const span = document.createElement('span');
+    span.className = 'ripple';
+    span.style.width = span.style.height = size + 'px';
+    span.style.left = (e.clientX - r.left - size/2) + 'px';
+    span.style.top = (e.clientY - r.top - size/2) + 'px';
+    host.appendChild(span);
+    span.addEventListener('animationend', ()=> span.remove());
+  });
+
+  // ---------- terminal typewriter ----------
+  const lines = [
+    'flutter build apk --release',
+    'nmap -sV target.local',
+    'firebase deploy --only firestore',
+    'burpsuite --scan pseudonymous.apk'
+  ];
+  const typeEl = document.getElementById('typeline');
+  let li = 0, ci = 0, deleting = false;
+  function tick(){
+    const full = lines[li];
+    if(!deleting){
+      ci++; typeEl.textContent = full.slice(0, ci);
+      if(ci === full.length){ deleting = true; setTimeout(tick, 1500); return; }
+    } else {
+      ci--; typeEl.textContent = full.slice(0, ci);
+      if(ci === 0){ deleting = false; li = (li+1) % lines.length; }
+    }
+    setTimeout(tick, deleting ? 28 : 55);
+  }
+  tick();
+
+  // ---------- FAB scroll-to-top ----------
+  const fab = document.getElementById('fabTop');
+  window.addEventListener('scroll', ()=>{ fab.classList.toggle('show', window.scrollY > 700); });
+  fab.addEventListener('click', ()=> window.scrollTo({ top:0, behavior:'smooth' }));
+
+  // ---------- modal data + logic ----------
+  const iconSvg = {
+    languages: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg>',
+    mobile: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18h2"/></svg>',
+    cyber: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l7 3.2v5.4c0 4.8-3 8.9-7 10.4-4-1.5-7-5.6-7-10.4V5.7z"/></svg>',
+    devtools: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M7 14h4"/></svg>',
+    sectools: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l2.4 5.4 5.9.6-4.4 4 1.3 5.8L12 15.6 6.8 18.3l1.3-5.8-4.4-4 5.9-.6z"/></svg>',
+    ai: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.2 2"/></svg>'
+  };
+  const skillsData = {
+    languages: { eyebrow:'Skill · Core', title:'Languages', desc:'The languages I write day to day — Dart for building and animating Flutter interfaces, C for lower-level and systems-level thinking, and Node.js for lightweight backend and tooling work.', feats:['Dart & Flutter widgets','State management','C fundamentals','Node.js scripting/APIs'], tags:['Dart','Flutter','C','Node.js'] },
+    mobile: { eyebrow:'Skill · Delivery', title:'Mobile development', desc:'End-to-end app delivery: interface design, backend wiring, and the API layer that connects them — the same loop I used to build Pseudonymous and Chameleon.', feats:['Firebase Auth & Firestore','REST API integration','UI/UX design in Figma','Responsive layouts'], tags:['Firebase','API integration','UI/UX design'] },
+    cyber: { eyebrow:'Skill · Security', title:'Cybersecurity', desc:'Certified Ethical Hacker background applied back into app development — thinking like an attacker before shipping, and treating security as part of the build, not an afterthought.', feats:['Vulnerability assessment','Reverse engineering','Secure coding review','Threat modelling'], tags:['Ethical hacking','Vulnerability assessment','Reverse engineering'] },
+    devtools: { eyebrow:'Skill · Workflow', title:'Dev tools', desc:'The everyday toolchain for writing, tracking, and shipping code across a small team or solo.', feats:['VS Code & Android Studio','Git version control','Pull request review','GitHub Actions ready'], tags:['VS Code','Android Studio','Git','GitHub'] },
+    sectools: { eyebrow:'Skill · Testing', title:'Security tools', desc:'The toolkit used for hands-on assessments — traffic inspection, network scanning, and controlled penetration testing in an isolated environment.', feats:['Burp Suite traffic analysis','Wireshark packet inspection','Kali Linux toolchain','Nmap network scanning'], tags:['Burp Suite','Wireshark','Kali Linux','Nmap'] },
+    ai: { eyebrow:'Skill · Acceleration', title:'AI & collaboration', desc:'AI tools I use to move faster while building and researching, alongside the platforms that keep collaborative work organised.', feats:['Gemini & ChatGPT for research','TensorFlow & PyTorch basics','Figma prototyping','Jira & Slack workflows'], tags:['Gemini','ChatGPT','Perplexity AI','TensorFlow','PyTorch','Figma','Jira','Slack','Microsoft Teams','Trello'] }
+  };
+  const projectsData = {
+    pseudonymous: {
+      eyebrow:'Project · Privacy · Social platform', title:'Pseudonymous', icon:'languages',
+      desc:'A privacy-focused social platform where conversations matter more than identities. Users interact through usernames and customizable built-in avatars instead of public personas, so ideas can be shared without exposing who\'s behind them — built on Flutter and Firebase with Material Design 3.',
+      feats:['Email & Google authentication','Anonymous mode & custom avatars','Posts, likes, comments & replies','Follow system & notifications','Material Design 3, dark-theme ready','Cloud Firestore backend'],
+      tags:['Flutter','Firebase Auth','Firestore','GoRouter','Provider','ScreenUtil+'],
+      links:[{label:'View repository', url:'https://github.com/souravkaushik-dev/pseudonymous'}]
+    },
+    chameleon: {
+      eyebrow:'Project · Media · Music player', title:'Chameleon', icon:'ai',
+      desc:'A cinematic music player built around the music, not the interface. Artwork takes center stage, controls fade in only when needed, and a real-time equalizer, Liquid Glass navigation, and YouTube-powered discovery keep the whole experience quiet and focused. Currently an early production build (v1.0.3).',
+      feats:['Real-time equalizer with 8 presets','Cinematic full-screen player','Playlists, queue & sleep timer','YouTube-powered search & discovery','Liquid Glass floating navigation','Light & dark themes'],
+      tags:['Flutter','just_audio','audio_service','youtube_explode_dart','shared_preferences'],
+      links:[{label:'View repository', url:'https://github.com/souravkaushik-dev/chameleon'}]
+    }
+  };
+  const backdrop = document.getElementById('modalBackdrop');
+  function openModal(data){
+    document.getElementById('modalEyebrow').textContent = data.eyebrow;
+    document.getElementById('modalIcon').innerHTML = iconSvg[data.icon] || iconSvg.languages;
+    document.getElementById('modalTitle').textContent = data.title;
+    document.getElementById('modalDesc').textContent = data.desc;
+    document.getElementById('modalFeats').innerHTML = data.feats.map(f=>`<li>${f}</li>`).join('');
+    document.getElementById('modalTags').innerHTML = data.tags.map(t=>`<span class="taglist"><span>${t}</span></span>`).join('');
+    document.getElementById('modalLinks').innerHTML = (data.links||[]).map(l=>`<a class="btn btn-primary ripple-host" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
+    backdrop.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(){ backdrop.classList.remove('open'); document.body.style.overflow = ''; }
+  document.querySelectorAll('[data-skill]').forEach(card=>{
+    card.addEventListener('click', ()=> openModal({ ...skillsData[card.dataset.skill], icon: card.dataset.skill }));
+    card.addEventListener('keydown', (e)=>{ if(e.key==='Enter') openModal({ ...skillsData[card.dataset.skill], icon: card.dataset.skill }); });
+  });
+  document.querySelectorAll('[data-project]').forEach(card=>{
+    card.addEventListener('click', (e)=>{ if(e.target.closest('a')) return; openModal(projectsData[card.dataset.project]); });
+    card.addEventListener('keydown', (e)=>{ if(e.key==='Enter') openModal(projectsData[card.dataset.project]); });
+  });
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  backdrop.addEventListener('click', (e)=>{ if(e.target === backdrop) closeModal(); });
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
+</script>
 </body>
 </html>
